@@ -10,15 +10,18 @@ void push(int newdata, Node* &top);
 void print(Node* top);
 void pop(Node* &top);
 void peek(Node* top);
+void enqueue(Node* & front, Node* & rear, int newdata);
+void dequeue(Node* &tempfront, Node* &rear);
 int main() {
-  Node* top = NULL;
-  pop(top);
-  push(20, top);
-  push(11, top);
-  peek(top);
-  print(top);
-  pop(top);
-  print(top);
+  Node* stack = NULL;
+  Node* queuefront = NULL;
+  Node* queuerear = NULL;
+  enqueue(queuefront, queuerear, 7);
+  enqueue(queuefront, queuerear, 8);
+  enqueue(queuefront, queuerear, 9);
+  dequeue(queuefront, queuerear);
+  dequeue(queuefront, queuerear);
+  dequeue(queuefront, queuerear);
   return 0;
 }
 
@@ -47,10 +50,48 @@ void pop(Node* &top) {
 }
 void peek(Node* top) {
   if(top != NULL) {
-    cout << top->data;
+    cout << top->data << endl;
   }
   else {
     cout << "The stack is empty";
+  }
+}
+void enqueue(Node* & front, Node* & rear, int newdata) {
+  if(front == NULL && rear == NULL) {
+    cout << "test";
+    
+    Node* temp = new Node();
+    temp->next = NULL;
+    
+    temp->data = newdata;
+
+    front = temp;
+    rear = temp;
+    temp->next = NULL;
+    }
+  else {
+    Node* temp = new Node();
+    temp->data = newdata;
+    temp->next = front;
+    front = temp;
+    cout << "The front is" << front->data << endl;
+    cout << "The rear is" << rear->data << endl;
+  }
+}
+void dequeue(Node* &tempfront, Node* & rear) {
+  if(rear == NULL) {
+    cout << "The queue is empty!";
+  }
+  //Add case for a one element queue here
+  else if(tempfront->next == rear) {
+    Node* temprear = rear;
+    
+    cout << "The rear has been delete" << rear->data << endl;
+    rear = tempfront;
+    delete temprear;
+  }
+  else {
+    dequeue(tempfront->next, rear);
   }
 }
 
