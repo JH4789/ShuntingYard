@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include "Tree.h"
 using namespace std;
 struct Node {
   Node* next;
@@ -13,15 +13,15 @@ void peek(Node* top);
 void enqueue(Node* & front, Node* & rear, int newdata);
 void dequeue(Node* &tempfront, Node* &rear);
 int main() {
+  cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation." << endl;
+  char input[100];
+  cin >> input;
+  for(int i = 0; i < strlen(input)/2; i++) {
+      
+  }
   Node* stack = NULL;
   Node* queuefront = NULL;
   Node* queuerear = NULL;
-  enqueue(queuefront, queuerear, 7);
-  enqueue(queuefront, queuerear, 8);
-  enqueue(queuefront, queuerear, 9);
-  dequeue(queuefront, queuerear);
-  dequeue(queuefront, queuerear);
-  dequeue(queuefront, queuerear);
   return 0;
 }
 
@@ -82,7 +82,14 @@ void dequeue(Node* &tempfront, Node* & rear) {
   if(rear == NULL) {
     cout << "The queue is empty!";
   }
-  //Add case for a one element queue here
+  else if(tempfront == rear) {
+    cout << "One left" <<endl;
+     Node* temprear = rear;
+    delete temprear;
+    tempfront = NULL;
+    rear = NULL;
+    
+  }
   else if(tempfront->next == rear) {
     Node* temprear = rear;
     
