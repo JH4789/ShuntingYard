@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "Tree.h"
 using namespace std;
 struct Node {
@@ -6,30 +7,56 @@ struct Node {
   int data;
 };
 
-void push(int newdata, Node* &top);
+void push(char newdata, Node* &top);
 void print(Node* top);
 void pop(Node* &top);
 void peek(Node* top);
-void enqueue(Node* & front, Node* & rear, int newdata);
+void enqueue(Node* & front, Node* & rear, char newdata);
 void dequeue(Node* &tempfront, Node* &rear);
 int main() {
-  cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation." << endl;
+  cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
   char input[100];
   cin >> input;
-  for(int i = 0; i < strlen(input)/2; i++) {
-      
-  }
+  
   Node* stack = NULL;
   Node* queuefront = NULL;
   Node* queuerear = NULL;
+  while(i < strlen(input)) {
+    if(isdigit(input[i])) {
+      enqueue(queuefront, queuerear, input[i]);
+    }
+    else if(input[i] == '^' || input[i] == '*' || input[i] == '+' || input[i] == '-' || input[i] == '/') {
+      push(input[i] , stack);
+    }
+
+
+    i++;
+  }
   return 0;
 }
 
-void push(int newdata, Node* &top) {
+void push(char newdata, Node* &top) {
   Node* tempnext = new Node();
   tempnext->data = newdata;
   tempnext->next = top;
   top = tempnext;
+}
+int priority(char prio) {
+  if(prio == '+') {
+    return 1;
+  }
+  else if (prio == '-') {
+    return 1;
+  }
+  else if (prio == '*') {
+    return 2;
+  }
+  else if (prio == '/') {
+    return 2;
+  }
+  else if (prio == '^') {
+    return 3;
+  }
 }
 void print(Node* top) {
   Node* current = top;
@@ -56,7 +83,7 @@ void peek(Node* top) {
     cout << "The stack is empty";
   }
 }
-void enqueue(Node* & front, Node* & rear, int newdata) {
+void enqueue(Node* & front, Node* & rear, char newdata) {
   if(front == NULL && rear == NULL) {
     cout << "test";
     
