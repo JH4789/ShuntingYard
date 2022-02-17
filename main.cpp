@@ -4,34 +4,25 @@
 using namespace std;
 struct Node {
   Node* next;
-  int data;
+  char data;
 };
-
+void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear);
 void push(char newdata, Node* &top);
 void print(Node* top);
 void pop(Node* &top);
-void peek(Node* top);
+char peek(Node* top);
+int priority(char prio);
 void enqueue(Node* & front, Node* & rear, char newdata);
 void dequeue(Node* &tempfront, Node* &rear);
 int main() {
-  cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
-  char input[100];
-  cin >> input;
-  
   Node* stack = NULL;
   Node* queuefront = NULL;
   Node* queuerear = NULL;
-  while(i < strlen(input)) {
-    if(isdigit(input[i])) {
-      enqueue(queuefront, queuerear, input[i]);
-    }
-    else if(input[i] == '^' || input[i] == '*' || input[i] == '+' || input[i] == '-' || input[i] == '/') {
-      push(input[i] , stack);
-    }
-
-
-    i++;
-  }
+  
+  cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
+  char input[100];
+  cin >> input;
+  postfix(input, stack, queuefront, queuerear);  
   return 0;
 }
 
@@ -57,6 +48,9 @@ int priority(char prio) {
   else if (prio == '^') {
     return 3;
   }
+  else {
+    return 0;
+  }
 }
 void print(Node* top) {
   Node* current = top;
@@ -71,21 +65,21 @@ void pop(Node* &top) {
   }
   else {
      Node* temp = top;
+     cout << top->data << ' ';
      top = top->next;
      delete temp;
   }
 }
-void peek(Node* top) {
+char peek(Node* top) {
   if(top != NULL) {
-    cout << top->data << endl;
+    return top->data;
   }
   else {
-    cout << "The stack is empty";
+    return 'N';
   }
 }
 void enqueue(Node* & front, Node* & rear, char newdata) {
   if(front == NULL && rear == NULL) {
-    cout << "test";
     
     Node* temp = new Node();
     temp->next = NULL;
@@ -101,18 +95,16 @@ void enqueue(Node* & front, Node* & rear, char newdata) {
     temp->data = newdata;
     temp->next = front;
     front = temp;
-    cout << "The front is" << front->data << endl;
-    cout << "The rear is" << rear->data << endl;
-  }
+    }
 }
 void dequeue(Node* &tempfront, Node* & rear) {
   if(rear == NULL) {
     cout << "The queue is empty!";
   }
   else if(tempfront == rear) {
-    cout << "One left" <<endl;
      Node* temprear = rear;
-    delete temprear;
+     cout << temprear->data << ' ';
+     delete temprear;
     tempfront = NULL;
     rear = NULL;
     
@@ -120,12 +112,43 @@ void dequeue(Node* &tempfront, Node* & rear) {
   else if(tempfront->next == rear) {
     Node* temprear = rear;
     
-    cout << "The rear has been delete" << rear->data << endl;
+    cout << rear->data << ' ';
     rear = tempfront;
     delete temprear;
+    
   }
   else {
     dequeue(tempfront->next, rear);
-  }
+   }
 }
 
+void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear) {
+  int i = 0;
+  while(i <= strlen(input)) {
+    if(isdigit(input[i])) {
+      enqueue(queuefront, queuerear, input[i]);
+    }
+    else if(input[i] == '^' || input[i] == '*' || input[i] == '+' || input[i] == '-' || input[i] == '/') {
+      if(priority(peek(stack)) > priority(input[i])) {
+        while(queuerear != NULL) {
+	  dequeue(queuefront, queuerear);
+	}
+	pop(stack);
+	push(input[i], stack);
+      }
+      else {
+         push(input[i] , stack);
+      }
+      
+    }
+    else {
+      while(queuerear != NULL) {
+	  dequeue(queuefront, queuerear);
+      }
+      while(stack != NULL) {
+	pop(stack);
+      }
+    }
+    i++;
+  }
+}
