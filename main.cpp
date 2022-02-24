@@ -9,7 +9,8 @@ struct Node {
 void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear);
 void push(char newdata, Node* &top);
 void print(Node* top);
-void pop(Node* &top);
+void popto(Node* & top, Node* & front, Node* &rear);
+void pop(Node* & top);
 char peek(Node* top);
 int priority(char prio);
 void enqueue(Node* & front, Node* & rear, char newdata);
@@ -48,6 +49,9 @@ int priority(char prio) {
   else if (prio == '^') {
     return 3;
   }
+  else if (prio == '(') {
+    return 5;
+  }
   else {
     return 0;
   }
@@ -59,14 +63,31 @@ void print(Node* top) {
     current = current->next;
   }
 }
+void popto(Node* &top, Node* & front, Node* & rear) {
+  if(top == NULL) {
+    cout << "The stack is empty" << endl;
+  }
+  else if(top->data == '(') {
+    Node* temp = top; 
+     top = top->next;
+     delete temp;
+  }
+  else {
+     Node* temp = top;
+     enqueue(front, rear, top->data);
+     top = top->next;
+     
+     delete temp;
+  }
+}
 void pop(Node* &top) {
   if(top == NULL) {
     cout << "The stack is empty" << endl;
   }
   else {
      Node* temp = top;
-     cout << top->data << ' ';
      top = top->next;
+     
      delete temp;
   }
 }
@@ -129,24 +150,30 @@ void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear) {
       enqueue(queuefront, queuerear, input[i]);
     }
     else if(input[i] == '^' || input[i] == '*' || input[i] == '+' || input[i] == '-' || input[i] == '/') {
-      if(priority(peek(stack)) > priority(input[i])) {
-        while(queuerear != NULL) {
-	  dequeue(queuefront, queuerear);
-	}
-	pop(stack);
+      if(priority(peek(stack)) > priority(input[i]) && priority(peek(stack)) != 5) {
+	popto(stack, queuefront, queuerear);
 	push(input[i], stack);
       }
       else {
          push(input[i] , stack);
-      }
-      
+       }
+    }
+    else if (input[i] == '(') {
+      while
+      push(input[i], stack);
+    }
+    else if(input[i] == ')') {
+      while(peek(stack) != '(') {
+	popto(stack, queuefront, queuerear);      
+    }
     }
     else {
+      while(stack != NULL) {
+	popto(stack, queuefront, queuerear);
+	
+      }
       while(queuerear != NULL) {
 	  dequeue(queuefront, queuerear);
-      }
-      while(stack != NULL) {
-	pop(stack);
       }
     }
     i++;
