@@ -6,6 +6,9 @@ class Tree{
   Tree(char newtoken);
   Tree* getLeft();
   Tree* getRight();
+  
+  void setLeft(Tree* newleft);
+  void setRight(Tree* newright);
   char returnToken();
  private:
 

@@ -14,7 +14,8 @@ void pop(Node* & top);
 char peek(Node* top);
 int priority(char prio);
 void enqueue(Node* & front, Node* & rear, char newdata);
-void dequeue(Node* &tempfront, Node* &rear);
+char dequeue(Node* &tempfront, Node* &rear);
+//void dequeue(Node* &tempfront, Node* &rear);
 int main() {
   Node* stack = NULL;
   Node* queuefront = NULL;
@@ -23,7 +24,13 @@ int main() {
   cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
   char input[100];
   cin >> input;
-  postfix(input, stack, queuefront, queuerear);  
+  postfix(input, stack, queuefront, queuerear);
+
+  while(queuerear != NULL && queuefront != NULL) {
+    Tree* newbranch = new Tree();
+    newbranch->token = dequeue(queuefront, queuerear);
+    cout << newbranch->token << ' ' << endl;
+  }
   return 0;
 }
 
@@ -104,10 +111,8 @@ char peek(Node* top) {
 }
 void enqueue(Node* & front, Node* & rear, char newdata) {
   if(front == NULL && rear == NULL) {
-    
     Node* temp = new Node();
     temp->next = NULL;
-    
     temp->data = newdata;
 
     front = temp;
@@ -119,31 +124,33 @@ void enqueue(Node* & front, Node* & rear, char newdata) {
     temp->data = newdata;
     temp->next = front;
     front = temp;
+    
     }
 }
-void dequeue(Node* &tempfront, Node* & rear) {
+char dequeue(Node* & tempfront, Node* & rear) {
   if(rear == NULL) {
     cout << "The queue is empty!";
+    return 'N';
   }
   else if(tempfront == rear) {
      Node* temprear = rear;
+     return temprear->data;
      cout << temprear->data << ' ';
      delete temprear;
     tempfront = NULL;
-    rear = NULL;
-    
+    rear = NULL; 
   }
   else if(tempfront->next == rear) {
     Node* temprear = rear;
-    
+    return rear->data;
     cout << rear->data << ' ';
     rear = tempfront;
     delete temprear;
     
   }
   else {
-    dequeue(tempfront->next, rear);
-   }
+    return dequeue(tempfront->next, rear);
+  }
 }
 
 void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear) {
@@ -174,17 +181,14 @@ void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear) {
 	}
 	else {
 	popto(stack, queuefront, queuerear);
-	}
-       }
+       	}
+      }
     }
     else {
       while(stack != NULL) {
-	popto(stack, queuefront, queuerear);
-	
+	popto(stack, queuefront, queuerear);	
       }
-      while(queuerear != NULL) {
-	  dequeue(queuefront, queuerear);
-      }
+      
     }
     i++;
   }

@@ -5,6 +5,12 @@ Tree::Tree(char newtoken) {
   left = NULL;
   right = NULL;
 }
+void Tree::setLeft(Tree* newleft) {
+  left = newleft;
+}
+void Tree::setRight(Tree* newright) {
+  right = newright;
+}
 Tree* Tree::getLeft() {
   return left;
 }
