@@ -68,9 +68,12 @@ void popto(Node* &top, Node* & front, Node* & rear) {
     cout << "The stack is empty" << endl;
   }
   else if(top->data == '(') {
-    Node* temp = top; 
+     Node* temp = top;
+     cout << "PopTheTop" << endl;
      top = top->next;
      delete temp;
+     cout << "This is top data";
+     cout << top->data << endl;
   }
   else {
      Node* temp = top;
@@ -159,13 +162,20 @@ void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear) {
        }
     }
     else if (input[i] == '(') {
-      while
+      
       push(input[i], stack);
     }
     else if(input[i] == ')') {
-      while(peek(stack) != '(') {
-	popto(stack, queuefront, queuerear);      
-    }
+      bool running = true;
+      while(running == true) {
+	if(peek(stack) == '(') {
+	  pop(stack);
+	  running = false;
+	}
+	else {
+	popto(stack, queuefront, queuerear);
+	}
+       }
     }
     else {
       while(stack != NULL) {
