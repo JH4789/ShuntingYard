@@ -6,7 +6,7 @@ struct Node {
   Node* next;
   char data;
 };
-void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear);
+void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear);
 void push(char newdata, Node* &top);
 void print(Node* top);
 void popto(Node* & top, Node* & front, Node* &rear);
@@ -15,7 +15,7 @@ char peek(Node* top);
 int priority(char prio);
 void enqueue(Node* & front, Node* & rear, char newdata);
 char dequeue(Node* &tempfront, Node* &rear);
-//void dequeue(Node* &tempfront, Node* &rear);
+void dequeuedel(Node* &tempfront, Node* &rear);
 int main() {
   Node* stack = NULL;
   Node* queuefront = NULL;
@@ -25,11 +25,13 @@ int main() {
   char input[100];
   cin >> input;
   postfix(input, stack, queuefront, queuerear);
-
+  Tree* last;
+  Tree* secondlast;
   while(queuerear != NULL && queuefront != NULL) {
-    Tree* newbranch = new Tree();
-    newbranch->token = dequeue(queuefront, queuerear);
-    cout << newbranch->token << ' ' << endl;
+    Tree* newbranch = new Tree(dequeue(queuefront, queuerear));
+    dequeuedel(queuefront, queuerear);
+    cout << newbranch->returnToken();
+    
   }
   return 0;
 }
@@ -135,15 +137,13 @@ char dequeue(Node* & tempfront, Node* & rear) {
   else if(tempfront == rear) {
      Node* temprear = rear;
      return temprear->data;
-     cout << temprear->data << ' ';
      delete temprear;
     tempfront = NULL;
     rear = NULL; 
   }
   else if(tempfront->next == rear) {
     Node* temprear = rear;
-    return rear->data;
-    cout << rear->data << ' ';
+    return temprear->data;
     rear = tempfront;
     delete temprear;
     
@@ -152,8 +152,28 @@ char dequeue(Node* & tempfront, Node* & rear) {
     return dequeue(tempfront->next, rear);
   }
 }
+void dequeuedel(Node* & tempfront, Node* & rear) {
+  if(rear == NULL) {
+    cout << "The queue is empty!";
+  }
+  else if(tempfront == rear) {
+     Node* temprear = rear;
+     delete temprear;
+    tempfront = NULL;
+    rear = NULL; 
+  }
+  else if(tempfront->next == rear) {
+    Node* temprear = rear;
+    rear = tempfront;
+    delete temprear;
+    
+  }
+  else {
+     dequeuedel(tempfront->next, rear);
+  }
+}
 
-void postfix(char input[], Node* stack, Node* queuefront, Node* queuerear) {
+void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear) {
   int i = 0;
   while(i <= strlen(input)) {
     if(isdigit(input[i])) {
