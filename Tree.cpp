@@ -1,8 +1,8 @@
 #include "Tree.h"
 
-Tree::Tree(char newtoken) {
-  token = newtoken;
+Tree::Tree() {
   left = NULL;
+  next = NULL;
   right = NULL;
 }
 void Tree::setLeft(Tree* newleft) {

@@ -13,6 +13,9 @@ void popto(Node* & top, Node* & front, Node* &rear);
 void pop(Node* & top);
 char peek(Node* top);
 int priority(char prio);
+void treepush(Tree* newtree, Tree* &top);
+void treepop(Tree* &top);
+Tree* treepeek(Tree* top);
 void enqueue(Node* & front, Node* & rear, char newdata);
 char dequeue(Node* &tempfront, Node* &rear);
 void dequeuedel(Node* &tempfront, Node* &rear);
@@ -20,19 +23,31 @@ int main() {
   Node* stack = NULL;
   Node* queuefront = NULL;
   Node* queuerear = NULL;
-  
+  Tree* treestack = NULL;
   cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
   char input[100];
+  
   cin >> input;
+  
   postfix(input, stack, queuefront, queuerear);
-  Tree* last;
-  Tree* secondlast;
+  
   while(queuerear != NULL && queuefront != NULL) {
-    Tree* newbranch = new Tree(dequeue(queuefront, queuerear));
+    Tree* newbranch = new Tree();
+    if(isdigit(dequeue(queuefront, queuerear))) {
+      treepush(newbranch , treestack);
+    }
+    else {
+      newbranch->right = treepeek(treestack);
+      treepop(treestack);
+      newbranch->left = treepeek(treestack);
+      treepop(treestack);
+      treepush(newbranch, treestack);
+    }
     dequeuedel(queuefront, queuerear);
-    cout << newbranch->returnToken();
+    
     
   }
+  
   return 0;
 }
 
@@ -41,6 +56,29 @@ void push(char newdata, Node* &top) {
   tempnext->data = newdata;
   tempnext->next = top;
   top = tempnext;
+}
+void treepush(Tree* newtree, Tree* &top) {
+  top->next = newtree;
+  cout << "otb";
+  top = top->next;
+}
+void treepop(Tree* &top) {
+  if(top == NULL) {
+    cout << "The stack is empty" << endl;
+  }
+  else {
+     Tree* temp = top;
+     top = top->next;
+     delete temp;
+  }
+}
+Tree* treepeek(Tree* top) {
+  if(top != NULL) {
+    return top;
+  }
+  else {
+    return NULL;
+  }
 }
 int priority(char prio) {
   if(prio == '+') {
@@ -75,14 +113,6 @@ void print(Node* top) {
 void popto(Node* &top, Node* & front, Node* & rear) {
   if(top == NULL) {
     cout << "The stack is empty" << endl;
-  }
-  else if(top->data == '(') {
-     Node* temp = top;
-     cout << "PopTheTop" << endl;
-     top = top->next;
-     delete temp;
-     cout << "This is top data";
-     cout << top->data << endl;
   }
   else {
      Node* temp = top;

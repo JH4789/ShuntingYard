@@ -3,15 +3,14 @@
 #include <iostream>
 class Tree{
  public:
-  Tree(char newtoken);
+  Tree();
   Tree* getLeft();
   Tree* getRight();
   
   void setLeft(Tree* newleft);
   void setRight(Tree* newright);
   char returnToken();
- private:
-
+  Tree* next;
   char token;
   Tree* left;
   Tree* right;
