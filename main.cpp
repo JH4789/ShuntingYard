@@ -8,7 +8,6 @@ struct Node {
 };
 void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear);
 void push(char newdata, Node* &top);
-void print(Node* top);
 void popto(Node* & top, Node* & front, Node* &rear);
 void pop(Node* & top);
 char peek(Node* top);
@@ -17,6 +16,8 @@ void treepush(Tree* & newtree, Tree* &top);
 void treepop(Tree* &newtree, Tree* &top);
 Tree* treepeek(Tree* top);
 void postfixprint(Tree* current);
+void prefixprint(Tree* current);
+void infixprint(Tree* current);
 void enqueue(Node* & front, Node* & rear, char newdata);
 char dequeue(Node* &tempfront, Node* &rear);
 void dequeuedel(Node* &tempfront, Node* &rear);
@@ -35,7 +36,7 @@ int main() {
   while(queuerear != NULL && queuefront != NULL) {
     
     if(isdigit(dequeue(queuefront, queuerear))) {
-      Tree* newbranch = new Tree();
+       Tree* newbranch = new Tree();
        newbranch->token = dequeue(queuefront, queuerear);
        treepush(treestack, newbranch);
     }
@@ -54,6 +55,8 @@ int main() {
     
   }
   postfixprint(treestack);
+  cout << endl;
+  prefixprint(treestack);
   return 0;
 }
 
@@ -63,18 +66,28 @@ void push(char newdata, Node* &top) {
   tempnext->next = top;
   top = tempnext;
 }
-void postfixprint(Tree* current) {//Prints out the postfix equation
+void postfixprint(Tree* current) {
   if(current == NULL) {
     return;
   }
   
-    postfixprint(current->left);//Recurcive call
+    postfixprint(current->left);
   
   
-    postfixprint(current->right);//Recurcive call
+    postfixprint(current->right);
   
     cout << current->token;
-  
+}
+void prefixprint(Tree* current) {
+  if(current == NULL) {
+    return;
+  }
+    cout << current->token;
+    prefixprint(current->left);
+    prefixprint(current->right);
+}
+void infixprint(Tree* current) {
+
 }
 void treepush(Tree* & newtree, Tree* &top) {
   Tree* temp = top;
@@ -114,13 +127,6 @@ int priority(char prio) {
   }
   else {
     return 0;
-  }
-}
-void print(Node* top) {
-  Node* current = top;
-  while(current != NULL) {
-    cout << current->data << endl;
-    current = current->next;
   }
 }
 void popto(Node* &top, Node* & front, Node* & rear) {
@@ -223,13 +229,24 @@ void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear)
       enqueue(queuefront, queuerear, input[i]);
     }
     else if(input[i] == '^' || input[i] == '*' || input[i] == '+' || input[i] == '-' || input[i] == '/') {
+      while(peek(stack) != 'N' && priority(peek(stack)) != 5 && priority(peek(stack)) >= priority(input[i]) && priority(input[i]) != 3) {
+        popto(stack, queuefront, queuerear);
+      }
+      push(input[i], stack);
+      /*
       if(priority(peek(stack)) > priority(input[i]) && priority(peek(stack)) != 5) {
+         
 	popto(stack, queuefront, queuerear);
 	push(input[i], stack);
+      }
+      else if(priority(peek(stack)) == priority(input[i]) && priority(peek(stack)) != 5 && priority(peek(stack)) != 3) {
+        popto(stack, queuefront, queuerear);
+	push(input[i] , stack);
       }
       else {
          push(input[i] , stack);
        }
+      */
     }
     else if (input[i] == '(') {
       
@@ -251,8 +268,641 @@ void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear)
       while(stack != NULL) {
 	popto(stack, queuefront, queuerear);	
       }
+ 
       
     }
     i++;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
