@@ -13,9 +13,10 @@ void popto(Node* & top, Node* & front, Node* &rear);
 void pop(Node* & top);
 char peek(Node* top);
 int priority(char prio);
-void treepush(Tree* newtree, Tree* &top);
-void treepop(Tree* &top);
+void treepush(Tree* & newtree, Tree* &top);
+void treepop(Tree* &newtree, Tree* &top);
 Tree* treepeek(Tree* top);
+void postfixprint(Tree* current);
 void enqueue(Node* & front, Node* & rear, char newdata);
 char dequeue(Node* &tempfront, Node* &rear);
 void dequeuedel(Node* &tempfront, Node* &rear);
@@ -32,22 +33,27 @@ int main() {
   postfix(input, stack, queuefront, queuerear);
   
   while(queuerear != NULL && queuefront != NULL) {
-    Tree* newbranch = new Tree();
+    
     if(isdigit(dequeue(queuefront, queuerear))) {
-      treepush(newbranch , treestack);
+      Tree* newbranch = new Tree();
+       newbranch->token = dequeue(queuefront, queuerear);
+       treepush(treestack, newbranch);
     }
     else {
-      newbranch->right = treepeek(treestack);
-      treepop(treestack);
-      newbranch->left = treepeek(treestack);
-      treepop(treestack);
-      treepush(newbranch, treestack);
+      Tree* newbranch = new Tree();
+      newbranch->token = dequeue(queuefront, queuerear);
+      Tree* temp = NULL;
+      treepop(treestack, temp);
+      newbranch->setRight(temp);
+      treepop(treestack, temp);
+      newbranch->setLeft(temp);
+      treepush(treestack, newbranch);
     }
     dequeuedel(queuefront, queuerear);
     
     
   }
-  
+  postfixprint(treestack);
   return 0;
 }
 
@@ -57,20 +63,27 @@ void push(char newdata, Node* &top) {
   tempnext->next = top;
   top = tempnext;
 }
-void treepush(Tree* newtree, Tree* &top) {
-  top->next = newtree;
-  cout << "otb";
-  top = top->next;
+void postfixprint(Tree* current) {//Prints out the postfix equation
+  if(current == NULL) {
+    return;
+  }
+  
+    postfixprint(current->left);//Recurcive call
+  
+  
+    postfixprint(current->right);//Recurcive call
+  
+    cout << current->token;
+  
 }
-void treepop(Tree* &top) {
-  if(top == NULL) {
-    cout << "The stack is empty" << endl;
-  }
-  else {
-     Tree* temp = top;
-     top = top->next;
-     delete temp;
-  }
+void treepush(Tree* & newtree, Tree* &top) {
+  Tree* temp = top;
+  temp->next = newtree;
+  newtree= temp;
+}
+void treepop(Tree* & newtree, Tree* &top) {
+  top = newtree;
+  newtree = newtree->next;
 }
 Tree* treepeek(Tree* top) {
   if(top != NULL) {

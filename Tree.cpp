@@ -2,7 +2,6 @@
 
 Tree::Tree() {
   left = NULL;
-  next = NULL;
   right = NULL;
 }
 void Tree::setLeft(Tree* newleft) {
