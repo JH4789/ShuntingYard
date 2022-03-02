@@ -1,3 +1,9 @@
+/*
+Name: Jayden Huang
+Date: 3/2/2022
+Description: Shunting Yard and Binary Tree Implementation
+ */
+//Includes
 #include <iostream>
 #include <cstring>
 #include "Tree.h"
@@ -6,35 +12,35 @@ struct Node {
   Node* next;
   char data;
 };
+
+void enqueue(Node* & front, Node* & rear, char newdata);
+char dequeue(Node* &tempfront, Node* &rear);
+void dequeuedel(Node* &tempfront, Node* &rear);
 void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear);
 void push(char newdata, Node* &top);
+//Popto and pop kept separate because one adds it to a queue and the other only deletes it
 void popto(Node* & top, Node* & front, Node* &rear);
 void pop(Node* & top);
 char peek(Node* top);
 int priority(char prio);
+//Binary Tree Functions
 void treepush(Tree* & newtree, Tree* &top);
 void treepop(Tree* &newtree, Tree* &top);
 Tree* treepeek(Tree* top);
 void postfixprint(Tree* current);
 void prefixprint(Tree* current);
 void infixprint(Tree* current);
-void enqueue(Node* & front, Node* & rear, char newdata);
-char dequeue(Node* &tempfront, Node* &rear);
-void dequeuedel(Node* &tempfront, Node* &rear);
 int main() {
+  //Two stacks and a queue
   Node* stack = NULL;
   Node* queuefront = NULL;
   Node* queuerear = NULL;
   Tree* treestack = NULL;
   cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
   char input[100];
-  
-  cin >> input;
-  
+  cin >> input;  
   postfix(input, stack, queuefront, queuerear);
-  
-  while(queuerear != NULL && queuefront != NULL) {
-    
+  while(queuerear != NULL && queuefront != NULL) {  
     if(isdigit(dequeue(queuefront, queuerear))) {
        Tree* newbranch = new Tree();
        newbranch->token = dequeue(queuefront, queuerear);
@@ -51,15 +57,14 @@ int main() {
       treepush(treestack, newbranch);
     }
     dequeuedel(queuefront, queuerear);
-    
-    
   }
   postfixprint(treestack);
   cout << endl;
   prefixprint(treestack);
+  cout << endl;
+  infixprint(treestack);
   return 0;
 }
-
 void push(char newdata, Node* &top) {
   Node* tempnext = new Node();
   tempnext->data = newdata;
@@ -69,13 +74,9 @@ void push(char newdata, Node* &top) {
 void postfixprint(Tree* current) {
   if(current == NULL) {
     return;
-  }
-  
+  } 
     postfixprint(current->left);
-  
-  
     postfixprint(current->right);
-  
     cout << current->token;
 }
 void prefixprint(Tree* current) {
@@ -87,7 +88,17 @@ void prefixprint(Tree* current) {
     prefixprint(current->right);
 }
 void infixprint(Tree* current) {
-
+  if(current != NULL) {
+    if(isdigit(treepeek(current)->token) == false) {
+      cout << "(";
+    }
+    infixprint(current->left);
+    cout << current->token;
+    infixprint(current->right);
+    if(isdigit(treepeek(current)->token) == false) {
+      cout << ")";
+    }
+  }
 }
 void treepush(Tree* & newtree, Tree* &top) {
   Tree* temp = top;
@@ -233,20 +244,6 @@ void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear)
         popto(stack, queuefront, queuerear);
       }
       push(input[i], stack);
-      /*
-      if(priority(peek(stack)) > priority(input[i]) && priority(peek(stack)) != 5) {
-         
-	popto(stack, queuefront, queuerear);
-	push(input[i], stack);
-      }
-      else if(priority(peek(stack)) == priority(input[i]) && priority(peek(stack)) != 5 && priority(peek(stack)) != 3) {
-        popto(stack, queuefront, queuerear);
-	push(input[i] , stack);
-      }
-      else {
-         push(input[i] , stack);
-       }
-      */
     }
     else if (input[i] == '(') {
       
@@ -268,641 +265,7 @@ void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear)
       while(stack != NULL) {
 	popto(stack, queuefront, queuerear);	
       }
- 
-      
     }
     i++;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
