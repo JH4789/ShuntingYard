@@ -12,7 +12,7 @@ struct Node {
   Node* next;
   char data;
 };
-
+//Prototyping
 void enqueue(Node* & front, Node* & rear, char newdata);
 char dequeue(Node* &tempfront, Node* &rear);
 void dequeuedel(Node* &tempfront, Node* &rear);
@@ -38,9 +38,12 @@ int main() {
   Tree* treestack = NULL;
   cout << "Welcome to the Shunting Yard. Please enter an equation in infix notation. Do not use spaces to separate tokens." << endl;
   char input[100];
-  cin >> input;  
+  cin >> input;
+  //Initial conversion
   postfix(input, stack, queuefront, queuerear);
+  //Tree construction
   while(queuerear != NULL && queuefront != NULL) {  
+    //Inputs get added to the stack immediately if they are a number, otherwise the top two values on the stack become the left and right of the new input.
     if(isdigit(dequeue(queuefront, queuerear))) {
        Tree* newbranch = new Tree();
        newbranch->token = dequeue(queuefront, queuerear);
@@ -58,10 +61,14 @@ int main() {
     }
     dequeuedel(queuefront, queuerear);
   }
+  //Outputs
+  cout << "Postfix output: ";
   postfixprint(treestack);
   cout << endl;
+  cout << "Prefix output: ";
   prefixprint(treestack);
   cout << endl;
+  cout << "Infix output: ";
   infixprint(treestack);
   return 0;
 }
@@ -71,6 +78,7 @@ void push(char newdata, Node* &top) {
   tempnext->next = top;
   top = tempnext;
 }
+//Three different types of print
 void postfixprint(Tree* current) {
   if(current == NULL) {
     return;
@@ -100,6 +108,7 @@ void infixprint(Tree* current) {
     }
   }
 }
+//Tree related functions, only applicable to the stack for binary tree construction
 void treepush(Tree* & newtree, Tree* &top) {
   Tree* temp = top;
   temp->next = newtree;
@@ -117,6 +126,7 @@ Tree* treepeek(Tree* top) {
     return NULL;
   }
 }
+//Generates priority between operators
 int priority(char prio) {
   if(prio == '+') {
     return 1;
@@ -140,6 +150,7 @@ int priority(char prio) {
     return 0;
   }
 }
+//Moves top of stack to the queue
 void popto(Node* &top, Node* & front, Node* & rear) {
   if(top == NULL) {
     cout << "The stack is empty" << endl;
@@ -152,6 +163,7 @@ void popto(Node* &top, Node* & front, Node* & rear) {
      delete temp;
   }
 }
+//Deletes the top of the stack
 void pop(Node* &top) {
   if(top == NULL) {
     cout << "The stack is empty" << endl;
@@ -163,6 +175,7 @@ void pop(Node* &top) {
      delete temp;
   }
 }
+//Returns the top of the stack
 char peek(Node* top) {
   if(top != NULL) {
     return top->data;
@@ -171,6 +184,7 @@ char peek(Node* top) {
     return 'N';
   }
 }
+//Adds an element to the queue
 void enqueue(Node* & front, Node* & rear, char newdata) {
   if(front == NULL && rear == NULL) {
     Node* temp = new Node();
@@ -189,6 +203,7 @@ void enqueue(Node* & front, Node* & rear, char newdata) {
     
     }
 }
+//Returns the front of the queue
 char dequeue(Node* & tempfront, Node* & rear) {
   if(rear == NULL) {
     cout << "The queue is empty!";
@@ -212,6 +227,7 @@ char dequeue(Node* & tempfront, Node* & rear) {
     return dequeue(tempfront->next, rear);
   }
 }
+//Deletes the front of the queue don't ask why this couldn't be done in one function
 void dequeuedel(Node* & tempfront, Node* & rear) {
   if(rear == NULL) {
     cout << "The queue is empty!";
@@ -232,23 +248,28 @@ void dequeuedel(Node* & tempfront, Node* & rear) {
      dequeuedel(tempfront->next, rear);
   }
 }
-
+//Big function to convert infix to postfix
 void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear) {
   int i = 0;
+  //If digit immediately go to queue
   while(i <= strlen(input)) {
     if(isdigit(input[i])) {
       enqueue(queuefront, queuerear, input[i]);
     }
+    //If operator that isn't parenthese pop stack to queue until empty or until a token with different priority is read
     else if(input[i] == '^' || input[i] == '*' || input[i] == '+' || input[i] == '-' || input[i] == '/') {
       while(peek(stack) != 'N' && priority(peek(stack)) != 5 && priority(peek(stack)) >= priority(input[i]) && priority(input[i]) != 3) {
         popto(stack, queuefront, queuerear);
       }
       push(input[i], stack);
     }
+    //Parenthese get pushed to stack
     else if (input[i] == '(') {
-      
       push(input[i], stack);
     }
+    /*Close parenthese runs through stack until open parenthese is found
+      Pops everything that is found, excluding open parenthese
+    */
     else if(input[i] == ')') {
       bool running = true;
       while(running == true) {
@@ -261,6 +282,7 @@ void postfix(char input[], Node* & stack, Node* & queuefront, Node* & queuerear)
        	}
       }
     }
+    //Once there is nothing to read pop the entire stack
     else {
       while(stack != NULL) {
 	popto(stack, queuefront, queuerear);	

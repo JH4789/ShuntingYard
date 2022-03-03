@@ -1,12 +1,12 @@
 #ifndef TREEHEADER
 #define TREEHEADER
 #include <iostream>
+//All public for accesibility reasons
 class Tree{
  public:
   Tree();
   Tree* getLeft();
-  Tree* getRight();
-  
+  Tree* getRight();  
   void setLeft(Tree* newleft);
   void setRight(Tree* newright);
   char returnToken();
@@ -15,17 +15,4 @@ class Tree{
   Tree* left;
   Tree* right;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif

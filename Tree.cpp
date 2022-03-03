@@ -1,5 +1,5 @@
 #include "Tree.h"
-
+//Functions that aren't used a ton, constructor is the most important one
 Tree::Tree() {
   left = NULL;
   right = NULL;
